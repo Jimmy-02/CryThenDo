@@ -5,3 +5,7 @@ export const getAllTasks = (req, res) => {
 export const createTask = (req, res) => {
     req.status(201).send("Task created");
 }
+
+export const updateTask = (req, res) => {
+    req.status(200).send("Task updated");
+}
