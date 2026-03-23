@@ -1,3 +1,5 @@
+import Task from '../models/Task.js';
+
 export const getAllTasks = (req, res) => {
     res.status(200).send("All tasks");
 }
