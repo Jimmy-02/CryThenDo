@@ -9,3 +9,7 @@ export const createTask = (req, res) => {
 export const updateTask = (req, res) => {
     req.status(200).send("Task updated");
 }
+
+export const deleteTask = (req, res) => {
+    req.status(200).send("Task deleted");
+}
