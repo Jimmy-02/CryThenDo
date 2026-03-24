@@ -22,8 +22,23 @@ export const createTask = async (req, res) => {
     }
 }
 
-export const updateTask = (req, res) => {
-    res.status(200).send("Task updated");
+export const updateTask = async (req, res) => {
+    try {
+        const {title, status, completedAt} = req.body;
+        const updatedTask = await Task.findByIdAndUpdate(
+            req.params.id,
+            {title, status, completedAt},
+            {new: true}
+        );
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.status(200).json(updatedTask);
+
+    } catch (error) {
+        console.error('Error updating task:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 export const deleteTask = (req, res) => {
