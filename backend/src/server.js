@@ -11,6 +11,8 @@ const app = express();
 
 connectDB();
 
+app.use(express.json());
+
 app.use("/api/tasks", taskRouters);
 
 app.listen(PORT, () => {
