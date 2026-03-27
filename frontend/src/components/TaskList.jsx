@@ -1,9 +1,23 @@
-import React from 'react'
+import TaskEmptyState from "./TaskEmptyState";
+import TaskCard from "./TaskCard";
 
-const TaskList = () => {
+const TaskList = ({ filteredTasks = [], filter = "all", handleTaskChanged }) => {
+  if (!filteredTasks || filteredTasks.length === 0) {
+    return <TaskEmptyState filter={filter} />;
+  }
+
   return (
-    <div>TaskList</div>
-  )
-}
+    <div className="space-y-3">
+      {filteredTasks.map((task, index) => (
+        <TaskCard
+          key={task._id ?? index}
+          task={task}
+          index={index}
+          handleTaskChanged={handleTaskChanged}
+        />
+      ))}
+    </div>
+  );
+};
 
-export default TaskList
+export default TaskList;
