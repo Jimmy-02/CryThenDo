@@ -5,7 +5,7 @@ const TaskEmptyState = ({ filter }) => {
   return (
     <Card className="p-8 text-center border-0 bg-gradient-card shadow-custom-md">
       <div className="space-y-3">
-        <Circle className="mx-auto size-12 text-muted-foreground" />
+        <Circle className="mx-auto size-12 text-muted-foreground" aria-hidden="true" />
         <div>
           <h3 className="font-medium text-foreground">
             {filter === "active"
