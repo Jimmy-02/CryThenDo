@@ -75,7 +75,7 @@ const TaskCard = ({ task, index }) => {
           </div>
         </div>
 
-        <div className="hidden gap-2 group-hover:inline-flex animate-slide-up">
+        <div className="hidden gap-2 group-hover:inline-flex group-focus-within:inline-flex animate-slide-up">
           <Button
             variant="ghost"
             size="icon"
