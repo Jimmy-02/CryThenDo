@@ -11,12 +11,15 @@ import axios
  from 'axios';
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
-
+  const [activeTaskCount, setActiveTaskCount] = useState(0);
+  const [completeTaskCount, setCompleteTaskCount] = useState(0);
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const res = await axios.get("http://localhost:5001/api/tasks");
-        setTaskBuffer(res.data);
+        setTaskBuffer(res.data.tasks);
+        setActiveTaskCount(res.data.activeCount);
+        setCompleteTaskCount(res.data.completeCount);
       } catch (error) {
         console.error("Error fetching tasks:", error);
         toast.error("Failed to fetch tasks. Please try again later.");
@@ -40,7 +43,7 @@ const HomePage = () => {
 
           <AddTask />
 
-          <StatsAndFilter />
+          <StatsAndFilter activeTasksCount={activeTaskCount} completeTasksCount={completeTaskCount}/>
 
           <TaskList filteredTasks={taskBuffer}/>
 
@@ -49,7 +52,7 @@ const HomePage = () => {
             <DateTimeFilter />
           </div>
 
-          <Footer />
+          <Footer activeTasksCount={activeTaskCount} completedTasksCount={completeTaskCount} />
         </div>
       </div>
     </div>
