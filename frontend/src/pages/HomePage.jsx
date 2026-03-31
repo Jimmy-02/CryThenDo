@@ -13,18 +13,17 @@ const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
 
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const res = await axios.get("http://localhost:5001/api/tasks");
+        setTaskBuffer(res.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+        toast.error("Failed to fetch tasks. Please try again later.");
+      }
+    };
     fetchTasks();
   }, []);
-
-  const fetchTasks = async () => {
-    try {
-      const res = await axios.get("http://localhost:5001/api/tasks");
-      setTaskBuffer(res.data);
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-      toast.error("Failed to fetch tasks. Please try again later.");
-    }
-  }
   return (
     <div className="min-h-screen w-full bg-[#fefcff] relative">
       <div
