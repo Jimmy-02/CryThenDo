@@ -13,6 +13,7 @@ const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
+  const [filter, setFilter] = useState("all");
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -27,6 +28,17 @@ const HomePage = () => {
     };
     fetchTasks();
   }, []);
+
+  const filteredTasks = taskBuffer.filter((task) => {
+    switch (filter) {
+      case "active":
+        return task.status === "active";
+      case "completed":
+        return task.status === "complete";
+      default:
+        return true;
+    }
+  });
   return (
     <div className="min-h-screen w-full bg-[#fefcff] relative">
       <div
@@ -43,9 +55,9 @@ const HomePage = () => {
 
           <AddTask />
 
-          <StatsAndFilter activeTasksCount={activeTaskCount} completeTasksCount={completeTaskCount}/>
+          <StatsAndFilter filter={filter} setFilter={setFilter} activeTasksCount={activeTaskCount} completeTasksCount={completeTaskCount}/>
 
-          <TaskList filteredTasks={taskBuffer}/>
+          <TaskList filteredTasks={filteredTasks} filter='filter'/>
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <TaskListPagination />
