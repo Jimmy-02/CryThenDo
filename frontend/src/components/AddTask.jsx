@@ -3,8 +3,8 @@ import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
-import axios from "axios";
 import { toast } from "sonner";
+import api from "@/lib/axios";
 
 const AddTask = ({ handleNewTaskAdded }) => {
   const [newTaskTitle, setNewTaskTitle] = useState("");
@@ -12,7 +12,7 @@ const AddTask = ({ handleNewTaskAdded }) => {
   const addTask = async () => {
     if (newTaskTitle.trim()) {
       try {
-        await axios.post("http://localhost:5001/api/tasks", {
+        await api.post("/tasks", {
           title: newTaskTitle,
         });
         toast.success("Task added successfully!");

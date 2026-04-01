@@ -7,16 +7,17 @@ import TaskList from '@/components/TaskList';
 import TaskListPagination from '@/components/TaskListPagination';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import axios
- from 'axios';
+import api from '@/lib/axios';
+
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
   const [filter, setFilter] = useState("all");
+
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/tasks");
+      const res = await api.get("/tasks");
       setTaskBuffer(res.data.tasks);
       setActiveTaskCount(res.data.activeCount);
       setCompleteTaskCount(res.data.completeCount);
