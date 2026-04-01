@@ -40,7 +40,29 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
       console.error("Error updating task:", error);
       toast.error("Failed to update task.");
     }
-  }
+  };
+
+  const toggleTaskCompleteButton = async () => {
+    try {
+      if (task.status === "active") {
+        await api.put(`/tasks/${task._id}`, {
+          status: "complete",
+          completedAt: new Date().toISOString(),
+        });
+        toast.success(`${task.title} marked as complete!`);
+      } else{
+        await api.put(`/tasks/${task._id}`, {
+          status: "active",
+          completedAt: null,
+        });
+        toast.success(`${task.title} marked as active!`);
+      }
+      handleTaskChanged();
+    } catch (error) {
+      console.error("Error toggling task status:", error);
+      toast.error("Failed to toggle task status.");
+    }
+  };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -65,6 +87,7 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
               ? "text-success hover:text-success/80"
               : "text-muted-foreground hover:text-primary",
           )}
+          onClick={toggleTaskCompleteButton}
         >
           {task.status === "complete" ? (
             <CheckCircle2 className="size-5" />
