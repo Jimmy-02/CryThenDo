@@ -68,7 +68,7 @@ const HomePage = () => {
             completeTasksCount={completeTaskCount}
           />
 
-          <TaskList filteredTasks={filteredTasks} filter="filter" />
+          <TaskList filteredTasks={filteredTasks} filter={filter} handleTaskChanged={handleTaskChanged} />
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <TaskListPagination />
