@@ -11,9 +11,11 @@ import {
 import { Input } from "./ui/input";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const TaskCard = ({ task, index, handleTaskChanged }) => {
-  let isEditting = false;
+  const [isEditting, setIsEditting] = useState(false);
+  const [updateTaskTitle, setUpdateTaskTitle] = useState(task.title || "");
 
   const deleteTask = async (taskId) => {
     try {
@@ -24,7 +26,27 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
       console.error("Error deleting task:", error);
       toast.error("Failed to delete task.");
     }
+  };
+
+  const updateTask = async () => {
+    try {
+      setIsEditting(false);
+      await api.put(`/tasks/${task._id}`, {
+        title: updateTaskTitle,
+      });
+      toast.success("Task updated successfully!");
+      handleTaskChanged();
+    } catch (error) {
+      console.error("Error updating task:", error);
+      toast.error("Failed to update task.");
+    }
   }
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      updateTask();
+    }
+  };
   return (
     <Card
       className={cn(
@@ -54,9 +76,16 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
         <div className="flex-1 min-w-0">
           {isEditting ? (
             <Input
-              placeholder="Cần phải làm gì?"
+              placeholder="What to do?"
               className="flex-1 h-12 text-base border-border/50 focus:border-primary/50 focus:ring-primary/20"
               type="text"
+              value={updateTaskTitle}
+              onChange={(e) => setUpdateTaskTitle(e.target.value)}
+              onKeyPress={handleKeyPress}
+              onBlur={() => {
+                setIsEditting(false);
+                setUpdateTaskTitle(task.title || "");
+              }}
             />
           ) : (
             <p
@@ -93,6 +122,10 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
             variant="ghost"
             size="icon"
             className="shrink-0 transition-colors size-8 text-muted-foreground hover:text-info"
+            onClick={() => {
+              setIsEditting(true);
+              setUpdateTaskTitle(task.title || "");
+            }}
           >
             <SquarePen className="size-4" />
           </Button>
