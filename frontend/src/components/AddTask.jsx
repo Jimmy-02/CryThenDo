@@ -44,7 +44,7 @@ const AddTask = ({ handleNewTaskAdded }) => {
           onKeyPress = {handleKeyPress}
         />
 
-        <Button variant="gradient" size="xl" className="px-6" onClick={addTask}>
+        <Button variant="gradient" size="xl" className="px-6" onClick={addTask} disabled={!newTaskTitle.trim()}>
           <Plus className="size-5" />
           Add
         </Button>
