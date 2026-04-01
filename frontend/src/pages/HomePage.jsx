@@ -14,21 +14,26 @@ const HomePage = () => {
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
   const [filter, setFilter] = useState("all");
+  const fetchTasks = async () => {
+    try {
+      const res = await axios.get("http://localhost:5001/api/tasks");
+      setTaskBuffer(res.data.tasks);
+      setActiveTaskCount(res.data.activeCount);
+      setCompleteTaskCount(res.data.completeCount);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      toast.error("Failed to fetch tasks. Please try again later.");
+    }
+  };
+
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const res = await axios.get("http://localhost:5001/api/tasks");
-        setTaskBuffer(res.data.tasks);
-        setActiveTaskCount(res.data.activeCount);
-        setCompleteTaskCount(res.data.completeCount);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-        toast.error("Failed to fetch tasks. Please try again later.");
-      }
-    };
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTasks();
   }, []);
 
+  const handleTaskChanged = () => {
+    fetchTasks();
+  };
   const filteredTasks = taskBuffer.filter((task) => {
     switch (filter) {
       case "active":
@@ -53,18 +58,26 @@ const HomePage = () => {
         <div className="w-full max-w-2xl p-6 mx-auto space-y-6">
           <Header />
 
-          <AddTask />
+          <AddTask handleNewTaskAdded={handleTaskChanged}/>
 
-          <StatsAndFilter filter={filter} setFilter={setFilter} activeTasksCount={activeTaskCount} completeTasksCount={completeTaskCount}/>
+          <StatsAndFilter
+            filter={filter}
+            setFilter={setFilter}
+            activeTasksCount={activeTaskCount}
+            completeTasksCount={completeTaskCount}
+          />
 
-          <TaskList filteredTasks={filteredTasks} filter='filter'/>
+          <TaskList filteredTasks={filteredTasks} filter="filter" />
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <TaskListPagination />
             <DateTimeFilter />
           </div>
 
-          <Footer activeTasksCount={activeTaskCount} completedTasksCount={completeTaskCount} />
+          <Footer
+            activeTasksCount={activeTaskCount}
+            completedTasksCount={completeTaskCount}
+          />
         </div>
       </div>
     </div>
