@@ -65,7 +65,7 @@ const HomePage = () => {
             filter={filter}
             setFilter={setFilter}
             activeTasksCount={activeTaskCount}
-            completeTasksCount={completeTaskCount}
+            completedTasksCount={completeTaskCount}
           />
 
           <TaskList filteredTasks={filteredTasks} filter={filter} handleTaskChanged={handleTaskChanged} />
