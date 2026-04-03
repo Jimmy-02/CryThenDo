@@ -8,13 +8,14 @@ import TaskListPagination from '@/components/TaskListPagination';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import api from '@/lib/axios';
-
+import { visibleTaskLimit } from '@/lib/data';
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
   const [activeTaskCount, setActiveTaskCount] = useState(0);
   const [completeTaskCount, setCompleteTaskCount] = useState(0);
   const [filter, setFilter] = useState("all");
   const [dateQuery, setDateQuery] = useState("today");
+  const [page, setPage] = useState(1);
   const fetchTasks = async () => {
     try {
       const res = await api.get(`/tasks?filter=${dateQuery}`);
@@ -32,9 +33,30 @@ const HomePage = () => {
     fetchTasks();
   }, [dateQuery]);
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPage(1);
+  }, [filter, dateQuery]);
+
   const handleTaskChanged = () => {
     fetchTasks();
   };
+  
+  const handleNext = () =>{
+    if(page < totalPages) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () =>{
+    if(page > 1) {
+      setPage((prev) => prev - 1);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  }
   const filteredTasks = taskBuffer.filter((task) => {
     switch (filter) {
       case "active":
@@ -45,6 +67,17 @@ const HomePage = () => {
         return true;
     }
   });
+
+  const visibleTasks = filteredTasks.slice(
+    (page - 1) * visibleTaskLimit,
+    page * visibleTaskLimit,
+  );
+  
+  if(visibleTasks.length === 0 && page > 1) {
+    handlePrev();
+  }
+
+  const totalPages = Math.ceil(filteredTasks.length / visibleTaskLimit);
   return (
     <div className="min-h-screen w-full bg-[#fefcff] relative">
       <div
@@ -68,10 +101,16 @@ const HomePage = () => {
             completedTasksCount={completeTaskCount}
           />
 
-          <TaskList filteredTasks={filteredTasks} filter={filter} handleTaskChanged={handleTaskChanged} />
+          <TaskList filteredTasks={visibleTasks} filter={filter} handleTaskChanged={handleTaskChanged} />
 
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <TaskListPagination />
+            <TaskListPagination 
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              handlePageChange={handlePageChange}
+              page={page}
+              totalPages={totalPages}
+            />
             <DateTimeFilter dateQuery={dateQuery} setDateQuery={setDateQuery} />
           </div>
 
