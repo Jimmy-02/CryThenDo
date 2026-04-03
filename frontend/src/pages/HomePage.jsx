@@ -92,7 +92,7 @@ const HomePage = () => {
         <div className="w-full max-w-2xl p-6 mx-auto space-y-6">
           <Header />
 
-          <AddTask handleNewTaskAdded={handleTaskChanged}/>
+          <AddTask handleNewTaskAdded={handleTaskChanged} />
 
           <StatsAndFilter
             filter={filter}
@@ -101,17 +101,26 @@ const HomePage = () => {
             completedTasksCount={completeTaskCount}
           />
 
-          <TaskList filteredTasks={visibleTasks} filter={filter} handleTaskChanged={handleTaskChanged} />
+          <TaskList
+            filteredTasks={visibleTasks}
+            filter={filter}
+            handleTaskChanged={handleTaskChanged}
+          />
 
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <TaskListPagination 
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+            <TaskListPagination
               handleNext={handleNext}
               handlePrev={handlePrev}
               handlePageChange={handlePageChange}
               page={page}
               totalPages={totalPages}
             />
-            <DateTimeFilter dateQuery={dateQuery} setDateQuery={setDateQuery} />
+            <div className="ml-auto">
+              <DateTimeFilter
+                dateQuery={dateQuery}
+                setDateQuery={setDateQuery}
+              />
+            </div>
           </div>
 
           <Footer
